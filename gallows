@@ -31,19 +31,41 @@ v_line1.addLayout(h_line4)
 v_line1.addLayout(h_line5)
 window.setLayout(v_line1)
 
+window2 = QWidget()
+window2.setWindowTitle('Виселица')
+window2.resize(700, 400)
 
+def new_game():
+    if start_button.text() == 'Новая игра':
+        window.hide()
+        window2.show()
 
+class Hangman(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
 
+    def initUI(self):
+        self.setGeometry(300, 300, 300, 300)
+        self.setWindowTitle('Виселица')
 
+        self.word = random.choice(['кот', 'собака', 'питон', 'программирование', 'компьютер'])
+        self.tries = 0
+        self.max_tries = 6
+        self.guessed_letters = []
 
+        self.word_label = QLabel(self.word, self)
+        self.word_label.setGeometry(10, 10, 280, 30)
 
+        self.image_label = QLabel(self)
+        self.image_label.setGeometry(10, 50, 280, 200)
+        self.image_label.setPixmap(QPixmap('images/hangman0.png'))
 
+        self.letters_layout = QHBoxLayout()
+        self.letters = []
+        for letter in 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя':
+                button = QPushButton(letter)
 
-
-
-
-
-
-
+start_button.clicked.connect(new_game)
 
 app.exec_()
