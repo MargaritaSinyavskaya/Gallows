@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout, QLineEdit
+from PyQt5.QtGui import QPixmap, QPalette
 import random 
 import sys
 
@@ -8,13 +8,21 @@ app = QApplication([])
 window = QWidget()
 window.show()
 window.setWindowTitle('Виселица')
-window.resize(600, 700)
+window.resize(700, 500)
+
+palette = QPalette()
+palette.setColor(QPalette.Window, Qt.gray)
 
 start_button = QPushButton('Новая игра')
+start_button.setFixedSize(200, 50)
 exit_button = QPushButton('Выход')
+exit_button.setFixedSize(200, 50)
 continue_button = QPushButton('Продолжить')
+continue_button.setFixedSize(200, 50)
 highscore_button = QPushButton('Рекорды')
+highscore_button.setFixedSize(200, 50)
 achievement_button = QPushButton('Достижения')
+achievement_button.setFixedSize(200, 50)
 
 h_line1 = QHBoxLayout()
 h_line2 = QHBoxLayout()
@@ -22,11 +30,11 @@ h_line3 = QHBoxLayout()
 h_line4 = QHBoxLayout()
 h_line5 = QHBoxLayout()
 v_line1 = QVBoxLayout()
-h_line1.addWidget(start_button, alignment = Qt.AlignCenter)
-h_line2.addWidget(continue_button, alignment = Qt.AlignCenter)
-h_line3.addWidget(highscore_button, alignment = Qt.AlignCenter)
-h_line4.addWidget(achievement_button, alignment = Qt.AlignCenter)
-h_line5.addWidget(exit_button, alignment = Qt.AlignCenter)
+h_line1.addWidget(start_button, alignment = Qt.AlignRight)
+h_line2.addWidget(continue_button, alignment = Qt.AlignRight)
+h_line3.addWidget(highscore_button, alignment = Qt.AlignRight)
+h_line4.addWidget(achievement_button, alignment = Qt.AlignRight)
+h_line5.addWidget(exit_button, alignment = Qt.AlignRight)
 v_line1.addLayout(h_line1)
 v_line1.addLayout(h_line2)
 v_line1.addLayout(h_line3)
@@ -36,39 +44,84 @@ window.setLayout(v_line1)
 
 window2 = QWidget()
 window2.setWindowTitle('Виселица')
-window2.resize(700, 400)
 
 def new_game():
     if start_button.text() == 'Новая игра':
         window.hide()
         window2.show()
 
-class Hangman(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.initUI()
+main_layout = QVBoxLayout()
+right_layout = QVBoxLayout()
+top_layout = QHBoxLayout()
+alphabet_layout = QVBoxLayout()
+words_layout = QVBoxLayout()
 
-    def initUI(self):
-        self.setGeometry(300, 300, 300, 300)
-        self.setWindowTitle('Виселица')
+right_layout.addLayout(words_layout)
+right_layout.addLayout(alphabet_layout)
+top_layout.addLayout(right_layout)
+main_layout.addLayout(top_layout)
+window2.setLayout(main_layout)
 
-        self.word = random.choice(['кот', 'собака', 'питон', 'программирование', 'компьютер'])
-        self.tries = 0
-        self.max_tries = 6
-        self.guessed_letters = []
+s_letters = []
+for i in range(3):
+    s_letters.append(QHBoxLayout())
+    alphabet_layout.addLayout(s_letters[i])
 
-        self.word_label = QLabel(self.word, self)
-        self.word_label.setGeometry(10, 10, 280, 30)
+x = 0
+i = 0
+for letter in 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя':
+    button = QPushButton(letter)
+    s_letters[i].addWidget(button)
+    x += 1
+    if x % 11 == 0:
+        i += 1
+    button.setFixedSize(50, 50)
 
-        self.image_label = QLabel(self)
-        self.image_label.setGeometry(10, 50, 280, 200)
-        self.image_label.setPixmap(QPixmap('images/hangman0.png'))
+word = random.choice(['кот', 'собака', 'питон', 'программирование', 'компьютер', 'принтер', 'ноутбук', 'клавиатура', 'телефон', 'игра'])
+tries = 0
+max_tries = 6
+guessed_letters = []
 
-        self.letters_layout = QHBoxLayout()
-        self.letters = []
-        for letter in 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя':
-                button = QPushButton(letter)
+word_label = QLabel(word)
+word_label.setGeometry(10, 10, 280, 30)
+words_layout.addWidget(word_label)
+
+def check_letter(self):
+        letter = input.text().lower()
+        input.clear()
+
+        if letter in guessed_letters:
+            QMessageBox.warning('Предупреждение', 'Вы уже вводили эту букву!')
+            return
+
+        if letter in word:
+            guessed_letters.append(letter)
+            update_word_label()
+            if check_win():
+                QMessageBox.information('Победа!', 'Вы выиграли!')
+                close()
+        else:
+            tries += 1
+            update_image_label()
+            if check_lose():
+                QMessageBox.warning('Поражение', 'Вы проиграли!')
+                close()
+
+def letter_clicked(self):
+    sender = sender()
+    sender.setEnabled(False)
+    check_letter()
+
+input_layout = QVBoxLayout()
+input_label = QLabel('Введите букву:')
+input_layout.addWidget(input_label)
+inputt = QLineEdit()
+inputt.returnPressed.connect(check_letter)
+input_layout.addWidget(inputt)
+main_layout.addLayout(input_layout)
+window2.setLayout(main_layout)
 
 start_button.clicked.connect(new_game)
 
+app.setPalette(palette)
 app.exec_()
