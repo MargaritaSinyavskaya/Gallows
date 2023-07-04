@@ -8,7 +8,7 @@ app = QApplication([])
 window = QWidget()
 window.show()
 window.setWindowTitle('Виселица')
-window.resize(700, 500)
+window.resize(900, 600)
 
 start_button = QPushButton('Новая игра')
 start_button.setFixedSize(200, 50)
@@ -41,6 +41,7 @@ window.setLayout(v_line1)
 
 window2 = QWidget()
 window2.setWindowTitle('Виселица')
+window2.resize(900, 600)
 
 def new_game():
     if start_button.text() == 'Новая игра':
@@ -72,7 +73,7 @@ for letter in 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮ�
     x += 1
     if x % 11 == 0:
         i += 1
-    button.setFixedSize(50, 50)
+    button.setFixedSize(70, 70)
 
 word = random.choice(['кот', 'собака', 'питон', 'программирование', 'компьютер', 'принтер', 'ноутбук', 'клавиатура', 'телефон', 'игра'])
 tries = 0
