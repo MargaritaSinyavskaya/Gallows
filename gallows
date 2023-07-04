@@ -84,9 +84,6 @@ word_label.setGeometry(10, 10, 280, 30)
 words_layout.addWidget(word_label)
 
 def check_letter(self):
-        letter = input.text().lower()
-        input.clear()
-
         if letter in guessed_letters:
             QMessageBox.warning('Предупреждение', 'Вы уже вводили эту букву!')
             return
