@@ -110,7 +110,7 @@ def update_word_label(self):
     text = ''
     for letter in word:
         if letter in guessed_letters:
-            text += letter
+            text += letter 
         else:
             text += ' __ '
     word_label.setText(text)
