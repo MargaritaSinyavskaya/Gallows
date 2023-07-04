@@ -130,9 +130,9 @@ def update_image_label(self):
 start_button.clicked.connect(new_game)
 exit_button.clicked.connect(window.close)
 
-check_win(button)
-check_lose(button)
-update_word_label(button)
+check_win(window2)
+check_lose(window2)
+update_word_label(window2)
 #letter_clicked(button)
 
 app.exec_()
