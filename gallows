@@ -124,15 +124,12 @@ def check_win(self):
 def check_lose(self):
     return tries >= max_tries
 
-def update_image_label(self):
-        self.image_label.setPixmap(QPixmap(f'images/hangman{self.tries}.png'))
-
 start_button.clicked.connect(new_game)
 exit_button.clicked.connect(window.close)
 
 check_win(window2)
 check_lose(window2)
 update_word_label(window2)
-#letter_clicked(button)
+#letter_clicked(window2)
 
 app.exec_()
