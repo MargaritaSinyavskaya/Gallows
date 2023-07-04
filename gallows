@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout, QLineEdit
-from PyQt5.QtGui import QPixmap, QPalette
+from PyQt5.QtGui import QPixmap
 import random 
 import sys
 
@@ -9,9 +9,6 @@ window = QWidget()
 window.show()
 window.setWindowTitle('Виселица')
 window.resize(700, 500)
-
-palette = QPalette()
-palette.setColor(QPalette.Window, Qt.gray)
 
 start_button = QPushButton('Новая игра')
 start_button.setFixedSize(200, 50)
@@ -69,7 +66,7 @@ for i in range(3):
 
 x = 0
 i = 0
-for letter in 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя':
+for letter in 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ':
     button = QPushButton(letter)
     s_letters[i].addWidget(button)
     x += 1
@@ -112,16 +109,33 @@ def letter_clicked(self):
     sender.setEnabled(False)
     check_letter()
 
-input_layout = QVBoxLayout()
-input_label = QLabel('Введите букву:')
-input_layout.addWidget(input_label)
-inputt = QLineEdit()
-inputt.returnPressed.connect(check_letter)
-input_layout.addWidget(inputt)
-main_layout.addLayout(input_layout)
-window2.setLayout(main_layout)
+def update_word_label(self):
+    text = ''
+    for letter in word:
+        if letter in guessed_letters:
+            text += letter
+        else:
+            text += ' __ '
+    word_label.setText(text)
+
+def check_win(self):
+    for letter in word:
+        if letter not in guessed_letters:
+            return False
+    return True
+
+def check_lose(self):
+    return tries >= max_tries
+
+def update_image_label(self):
+        self.image_label.setPixmap(QPixmap(f'images/hangman{self.tries}.png'))
 
 start_button.clicked.connect(new_game)
+exit_button.clicked.connect(window.close)
 
-app.setPalette(palette)
+check_win(button)
+check_lose(button)
+update_word_label(button)
+#letter_clicked(button)
+
 app.exec_()
