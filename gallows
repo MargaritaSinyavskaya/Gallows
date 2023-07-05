@@ -1,5 +1,5 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout, QLineEdit
 from PyQt5.QtGui import QPixmap
 import random 
 import sys
@@ -53,36 +53,41 @@ right_layout = QVBoxLayout()
 top_layout = QHBoxLayout()
 alphabet_layout = QVBoxLayout()
 words_layout = QVBoxLayout()
+input_layout = QVBoxLayout()
 
 right_layout.addLayout(words_layout)
 right_layout.addLayout(alphabet_layout)
+right_layout.addLayout(input_layout)
 top_layout.addLayout(right_layout)
 main_layout.addLayout(top_layout)
 window2.setLayout(main_layout)
 
-s_letters = []
-for i in range(3):
-    s_letters.append(QHBoxLayout())
-    alphabet_layout.addLayout(s_letters[i])
-
-x = 0
-i = 0
-for letter in 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ':
-    button = QPushButton(letter)
-    s_letters[i].addWidget(button)
-    x += 1
-    if x % 11 == 0:
-        i += 1
-    button.setFixedSize(70, 70)
-
-word = random.choice(['кот', 'собака', 'питон', 'программирование', 'компьютер', 'принтер', 'ноутбук', 'клавиатура', 'телефон', 'игра', 'мышка', 'кружка', 'электричество', 'еда', 'погода'])
+word = random.choice(['кот', 'собака', 'ноутбук', 'телефон', 'игра', 'еда'])
 tries = 0
 max_tries = 6
 guessed_letters = []
 
 word_label = QLabel(word)
 word_label.setGeometry(10, 10, 280, 30)
-words_layout.addWidget(word_label)
+words_layout.addWidget(word_label, alignment = Qt.AlignRight)
+
+def check_win(self):
+    for letter in word:
+        if letter not in guessed_letters:
+            return False
+    return True
+
+def check_lose(self):
+    return tries >= max_tries
+
+def update_word_label(self):
+    text = ''
+    for letter in word:
+        if letter in guessed_letters:
+            text += letter
+        else:
+            text += ' __ '
+    word_label.setText(text)
 
 def check_letter(self):
         if letter in guessed_letters:
@@ -103,34 +108,35 @@ def check_letter(self):
                 close()
 
 def letter_clicked(self):
-    sender = sender()
+    sender = self.sender()
     sender.setEnabled(False)
-    check_letter()
+    check_letter(window2)
 
-def update_word_label(self):
-    text = ''
-    for letter in word:
-        if letter in guessed_letters:
-            text += letter 
-        else:
-            text += ' __ '
-    word_label.setText(text)
+s_letters = []
+for i in range(3):
+    s_letters.append(QHBoxLayout())
+    alphabet_layout.addLayout(s_letters[i])
 
-def check_win(self):
-    for letter in word:
-        if letter not in guessed_letters:
-            return False
-    return True
+x = 0
+i = 0
+for letter in 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ':
+    button = QPushButton(letter)
+    s_letters[i].addWidget(button)
+    x += 1
+    if x % 11 == 0:
+        i += 1
+    button.setFixedSize(70, 70)
+    button.clicked.connect(letter_clicked)
 
-def check_lose(self):
-    return tries >= max_tries
+input_label = QLabel('Введите букву:')
+input_layout.addWidget(input_label)
+inputt = QLineEdit()
+inputt.returnPressed.connect(check_letter)
+input_layout.addWidget(inputt)
 
 start_button.clicked.connect(new_game)
 exit_button.clicked.connect(window.close)
 
-check_win(window2)
-check_lose(window2)
 update_word_label(window2)
-#letter_clicked(window2)
 
 app.exec_()
