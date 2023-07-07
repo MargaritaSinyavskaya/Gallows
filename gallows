@@ -1,5 +1,5 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout, QLineEdit
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout, QLineEdit, QMessageBox
 from PyQt5.QtGui import QPixmap, QFont
 import random 
 import sys
@@ -44,6 +44,7 @@ window2.setWindowTitle('Виселица')
 window2.resize(900, 600)
 
 def new_game():
+    update_word_label(window2)
     window.hide()
     window2.show()
 
@@ -69,8 +70,10 @@ max_tries = 6
 guessed_letters = []
 
 word_label = QLabel(word)
-word_label.setGeometry(10, 10, 280, 30)
 words_layout.addWidget(word_label, alignment = Qt.AlignRight)
+font = word_label.font()
+font.setPointSize(20)
+word_label.setFont(font)
 
 def check_win(self):
     for letter in word:
@@ -135,32 +138,46 @@ inputt.returnPressed.connect(check_letter)
 input_layout.addWidget(inputt)
 
 pause_button = QPushButton('▐▐')
-pause_button.setFixedSize(40, 30)
+pause_button.setFixedSize(40, 40)
 pause_layout.addWidget(pause_button, alignment = Qt.AlignRight)
 
+pause_win = QWidget()
+pause_win.setWindowTitle('Пауза')
+pause_win.resize(300, 300)
+pause_win.hide()
+
+menu_button = QPushButton('Главное меню')
+continue_button2 = QPushButton('Продолжить')
+surrender_button = QPushButton('Сдаться')
+
+mein_pause_vlayout = QVBoxLayout()
+mein_pause_hlayout = QHBoxLayout()
+mein_pause_vlayout.addWidget(menu_button, alignment = Qt.AlignCenter)
+mein_pause_vlayout.addWidget(continue_button2, alignment = Qt.AlignCenter)
+mein_pause_vlayout.addWidget(surrender_button, alignment = Qt.AlignCenter)
+mein_pause_hlayout.addLayout(mein_pause_vlayout)
+pause_win.setLayout(mein_pause_hlayout)
+
 def pause_game():
-    pause_label = QLabel('Пауза')
-    pause_label.setFont(QFont('Arial', 20))
-    pause_label.setAlignment(Qt.AlignCenter)
-    pause_label.setStyleSheet('color: white;')
+    pause_win.show()
 
-    pause_layout = QVBoxLayout()
-    pause_layout.addStretch(1)
-    pause_layout.addWidget(pause_label)
-    pause_layout.addStretch(1)
+def exit_in_lobby():
+    pause_win.hide()
+    window2.hide()
+    window.show()
 
-    pause_screen_layout = QHBoxLayout()
-    pause_screen_layout.addStretch(1)
-    pause_screen_layout.addLayout(pause_layout)
-    pause_screen_layout.addStretch(1)
+def continue_game_before_pause():
+    pause_win.hide()
 
-    pause_screen_layout.setAlignment(Qt.AlignCenter)
-    window2.setLayout(pause_screen_layout)
+def surrender():
+    pause_win.hide()
+    word_label.setText(word)
 
 start_button.clicked.connect(new_game)
 exit_button.clicked.connect(window.close)
 pause_button.clicked.connect(pause_game)
-
-update_word_label(window2)
+menu_button.clicked.connect(exit_in_lobby)
+continue_button2.clicked.connect(continue_game_before_pause)
+surrender_button.clicked.connect(surrender)
 
 app.exec_()
