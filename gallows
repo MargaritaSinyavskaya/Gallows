@@ -43,11 +43,6 @@ window2 = QWidget()
 window2.setWindowTitle('Виселица')
 window2.resize(900, 600)
 
-def new_game():
-    update_word_label(window2)
-    window.hide()
-    window2.show()
-
 main_layout = QVBoxLayout()
 right_layout = QVBoxLayout()
 top_layout = QHBoxLayout()
@@ -157,6 +152,11 @@ mein_pause_vlayout.addWidget(continue_button2, alignment = Qt.AlignCenter)
 mein_pause_vlayout.addWidget(surrender_button, alignment = Qt.AlignCenter)
 mein_pause_hlayout.addLayout(mein_pause_vlayout)
 pause_win.setLayout(mein_pause_hlayout)
+
+def new_game():
+    update_word_label(window2)
+    window.hide()
+    window2.show()
 
 def pause_game():
     pause_win.show()
