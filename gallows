@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout, QLineEdit
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QFont
 import random 
 import sys
 
@@ -44,9 +44,8 @@ window2.setWindowTitle('Виселица')
 window2.resize(900, 600)
 
 def new_game():
-    if start_button.text() == 'Новая игра':
-        window.hide()
-        window2.show()
+    window.hide()
+    window2.show()
 
 main_layout = QVBoxLayout()
 right_layout = QVBoxLayout()
@@ -54,7 +53,9 @@ top_layout = QHBoxLayout()
 alphabet_layout = QVBoxLayout()
 words_layout = QVBoxLayout()
 input_layout = QVBoxLayout()
+pause_layout = QVBoxLayout()
 
+right_layout.addLayout(pause_layout)
 right_layout.addLayout(words_layout)
 right_layout.addLayout(alphabet_layout)
 right_layout.addLayout(input_layout)
@@ -102,7 +103,6 @@ def check_letter(self):
                 close()
         else:
             tries += 1
-            update_image_label()
             if check_lose():
                 QMessageBox.warning('Поражение', 'Вы проиграли!')
                 close()
@@ -134,8 +134,32 @@ inputt = QLineEdit()
 inputt.returnPressed.connect(check_letter)
 input_layout.addWidget(inputt)
 
+pause_button = QPushButton('▐▐')
+pause_button.setFixedSize(40, 30)
+pause_layout.addWidget(pause_button, alignment = Qt.AlignRight)
+
+def pause_game():
+    pause_label = QLabel('Пауза')
+    pause_label.setFont(QFont('Arial', 20))
+    pause_label.setAlignment(Qt.AlignCenter)
+    pause_label.setStyleSheet('color: white;')
+
+    pause_layout = QVBoxLayout()
+    pause_layout.addStretch(1)
+    pause_layout.addWidget(pause_label)
+    pause_layout.addStretch(1)
+
+    pause_screen_layout = QHBoxLayout()
+    pause_screen_layout.addStretch(1)
+    pause_screen_layout.addLayout(pause_layout)
+    pause_screen_layout.addStretch(1)
+
+    pause_screen_layout.setAlignment(Qt.AlignCenter)
+    window2.setLayout(pause_screen_layout)
+
 start_button.clicked.connect(new_game)
 exit_button.clicked.connect(window.close)
+pause_button.clicked.connect(pause_game)
 
 update_word_label(window2)
 
