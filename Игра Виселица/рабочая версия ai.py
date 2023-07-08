@@ -8,11 +8,11 @@ class Hangman(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Виселица')
-        self.setGeometry(100, 100, 400, 400)
+        self.setGeometry(100, 100, 500, 500)
 
         self.word = 'компьютер'
         self.tries = 0
-        self.max_tries = 6
+        self.max_tries = 8
         self.guessed_letters = []
 
         self.label = QLabel(self)
@@ -20,11 +20,22 @@ class Hangman(QMainWindow):
         self.label.setAlignment(Qt.AlignCenter)
         self.label.setFont(QFont('Arial', 20))
 
-        self.button_layout = QHBoxLayout()
-        for letter in 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя':
+        self.button_layout = QVBoxLayout()
+
+        s_letters = []
+        for i in range(3):
+            s_letters.append(QHBoxLayout())
+            self.button_layout.addLayout(s_letters[i])
+
+        x = 0
+        i = 0
+        for letter in 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ':
             button = QPushButton(letter, self)
             button.clicked.connect(lambda _, l=letter: self.check_letter(l))
-            self.button_layout.addWidget(button)
+            s_letters[i].addWidget(button)
+            x += 1
+            if x % 11 == 0:
+                i += 1
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.label)
@@ -41,24 +52,30 @@ class Hangman(QMainWindow):
         painter.setBrush(Qt.NoBrush)
 
         if self.tries >= 1:
-            painter.drawLine(50, 350, 150, 350)
+            painter.drawLine(250, 320, 10, 320) # draw the floor
 
         if self.tries >= 2:
-            painter.drawLine(100, 350, 100, 50)
+            painter.drawLine(70, 320, 70, 40) # draw the main_line
 
         if self.tries >= 3:
-            painter.drawLine(100, 50, 200, 50)
+            painter.drawLine(175, 40, 70, 40) # draw the hline
 
         if self.tries >= 4:
-            painter.drawLine(200, 50, 200, 100)
+            painter.drawLine(175, 40, 175, 100) # draw the vline
 
         if self.tries >= 5:
-            painter.drawEllipse(175, 100, 50, 50)
+            painter.drawEllipse(150, 100, 50, 50) # draw the head
 
         if self.tries >= 6:
-            painter.drawLine(200, 150, 200, 250)
-            painter.drawLine(200, 250, 175, 300)
-            painter.drawLine(200, 250, 225, 300)
+            painter.drawLine(175, 150, 175, 250)  # draw the body
+
+        if self.tries >= 7:
+            painter.drawLine(175, 175, 150, 200)  # draw the left arm
+            painter.drawLine(175, 175, 200, 200)  # draw the right arm
+
+        if self.tries >= 8:
+            painter.drawLine(175, 250, 150, 275)  # draw the left leg
+            painter.drawLine(175, 250, 200, 275)  # draw the right leg
 
     def check_letter(self, letter):
         if letter in self.guessed_letters:
