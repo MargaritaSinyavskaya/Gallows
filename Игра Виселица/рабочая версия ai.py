@@ -31,7 +31,6 @@ class Main_win(QMainWindow):
         self.Vline.addWidget(self.exit)        
         self.widget.setLayout(self.Vline)
 
-
 class Hangman(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -44,7 +43,6 @@ class Hangman(QMainWindow):
         self.guessed_letters = []
 
         self.pause_button = QPushButton('Пауза')
-
 
         self.label = QLabel(self)
         self.label.setGeometry(10, 10, 380, 30)
@@ -76,9 +74,7 @@ class Hangman(QMainWindow):
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
         self.setCentralWidget(self.widget)
-
-
-
+    
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
@@ -138,7 +134,7 @@ class Hangman(QMainWindow):
             if letter in self.guessed_letters:
                 text += letter
             else:
-                text += '_'
+                text += ' _ '
         self.label.setText(text)
         print(text)
         print(self.word)
