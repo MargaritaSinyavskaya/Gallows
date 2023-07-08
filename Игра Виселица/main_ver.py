@@ -12,7 +12,7 @@ class Main_Window(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUI()
-
+#главное меню
     def initUI(self):
         self.start_button = QPushButton('Новая игра')
         self.continue_button = QPushButton('Продолжить')
@@ -34,31 +34,29 @@ class Main_Window(QMainWindow):
 
         self.start_button.clicked.connect(self.open_game_window)
         
-
+#окно игры
     class game_window(QMainWindow):
         def __init__(self):
             super().__init__()
-            self.lb_man = QLabel()
-            
             self.widget = QWidget()
             self.widget.setWindowTitle('Виселица')
             self.widget.resize(700, 700)
             self.widget.show()
 
+            self.lb_man = QLabel()
+            
+
             self.main_layout = QVBoxLayout()
             self.right_layout = QVBoxLayout()
             self.top_layout = QHBoxLayout()
             self.alphabet_layout = QVBoxLayout()
-            #right_layout.addWidget() добавить виджет
-            self.right_layout.addLayout(self.alphabet_layout, Qt.AlignBottom)
-            #top_layout.addWidget(stickman)
-            self.top_layout.addLayout(self.right_layout)
+            self.right_layout.addLayout(self.alphabet_layout)
             self.top_layout.addWidget(self.lb_man)
+            self.top_layout.addLayout(self.right_layout)
+            
             self.main_layout.addLayout(self.top_layout)
-            #main_layout.addWidget()
             
             self.label = QLabel(self)
-            #self.label.setGeometry(10, 10, 380, 30)
             self.label.setAlignment(Qt.AlignCenter)
             self.label.setFont(QFont('Arial', 20))
             self.main_layout.addWidget(self.label)
@@ -70,8 +68,6 @@ class Main_Window(QMainWindow):
             self.max_tries = 6
             self.guessed_letters = []
 
-           
-            
             self.s_letters = []
             for i in range(3):
                 self.s_letters.append(QHBoxLayout())
@@ -90,37 +86,18 @@ class Main_Window(QMainWindow):
                 if x % 11 == 0:
                     i += 1  
 
-
-        def paintEvent(self, event):
             self.pixmap = QPixmap(500,500)
             self.pixmap.fill(QColor('white'))
-            self.lb_man.setPixmap(self.pixmap)
-            painter = QPainter(self.lb_man)
-            painter.setRenderHint(QPainter.Antialiasing)
-            painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
-            painter.setBrush(Qt.NoBrush)
+            
 
-            if self.tries >= 1:
-                painter.drawLine(50, 350, 150, 350)
+            self.painter = QPainter(self.pixmap)
 
-            if self.tries >= 2:
-                painter.drawLine(100, 350, 100, 50)
+            self.painter.setRenderHint(QPainter.Antialiasing)
+            self.painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
+            self.painter.setBrush(Qt.NoBrush)
 
-            if self.tries >= 3:
-                painter.drawLine(100, 50, 200, 50)
+            
 
-            if self.tries >= 4:
-                painter.drawLine(200, 50, 200, 100)
-
-            if self.tries >= 5:
-                painter.drawEllipse(175, 100, 50, 50)
-
-            if self.tries >= 6:
-                painter.drawLine(200, 150, 200, 250)
-                painter.drawLine(200, 250, 175, 300)
-                painter.drawLine(200, 250, 225, 300)
-
-            painter.end()
 
         def check_letter(self, letter):
             if letter in self.guessed_letters:
@@ -130,8 +107,29 @@ class Main_Window(QMainWindow):
 
             if letter not in self.word:
                 self.tries += 1
+                if self.tries >= 1:
+                    self.painter.drawLine(50, 350, 150, 350)
+
+                if self.tries >= 2:
+                    self.painter.drawLine(100, 350, 100, 50)
+
+                if self.tries >= 3:
+                    self.painter.drawLine(100, 50, 200, 50)
+
+                if self.tries >= 4:
+                    self.painter.drawLine(200, 50, 200, 100)
+
+                if self.tries >= 5:
+                    self.painter.drawEllipse(175, 100, 50, 50)
+
+                if self.tries >= 6:
+                    self.painter.drawLine(200, 150, 200, 250)
+                    self.painter.drawLine(200, 250, 175, 300)
+                    self.painter.drawLine(200, 250, 225, 300)
+                print(self.tries)
 
             self.update_label()
+            
 
             if self.check_win():
                 self.label.setText('Вы выиграли!')
@@ -140,8 +138,9 @@ class Main_Window(QMainWindow):
             if self.check_lose():
                 self.label.setText('Вы проиграли!')
                 self.disable_buttons()
-
+            
             self.update()
+            self.lb_man.setPixmap(self.pixmap)
 
         def update_label(self):
             text = ''
@@ -168,7 +167,6 @@ class Main_Window(QMainWindow):
 
     def open_game_window(self):
         self.window = self.game_window()
-        self.window.show()
         self.widget.hide()
 
 
