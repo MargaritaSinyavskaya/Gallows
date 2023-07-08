@@ -179,7 +179,6 @@ class pause_win(QMainWindow):
         self.continue_button.clicked.connect(self.continue_game_before_pause)
         self.surrender_button.clicked.connect(self.surrender)
 
-
     def exit_in_lobby(self):
         self.close()
         hangman.close()
@@ -192,7 +191,6 @@ class pause_win(QMainWindow):
         self.close()
         hangman.label.setText(hangman.word)
 
-            
 def open_game():
     hangman.show()
     hangman.tries = 0
@@ -200,14 +198,9 @@ def open_game():
     hangman.guessed_letters = []
     hangman.update_label()
     main.close()
-    
 
 def pause():
     pause_window.show()
-
-
-
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
