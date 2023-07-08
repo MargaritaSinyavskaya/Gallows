@@ -38,7 +38,7 @@ class Hangman(QMainWindow):
         self.setWindowTitle('Виселица')
         self.setGeometry(100, 100, 500, 500)
 
-        self.word = random.choice(['кот', 'собака', 'питон', 'программирование', 'компьютер'])
+        self.word = random.choice(['КОТ', 'СОБАКА', 'ПИТОН', 'ПРОГРАММИРОВАНИЕ', 'КОМПЬЮТЕР'])
         self.tries = 0
         self.max_tries = 8
         self.guessed_letters = []
@@ -140,6 +140,9 @@ class Hangman(QMainWindow):
             else:
                 text += '_'
         self.label.setText(text)
+        print(text)
+        print(self.word)
+        print(self.guessed_letters)
 
     def check_win(self):
         for letter in self.word:
@@ -183,16 +186,21 @@ class pause_win(QMainWindow):
         main.show()
 
     def continue_game_before_pause(self):
-        self.hide()
+        self.close()
 
     def surrender(self):
-        self.hide()
+        self.close()
         hangman.label.setText(hangman.word)
 
             
 def open_game():
     hangman.show()
-    main.hide()
+    hangman.tries = 0
+    hangman.word = random.choice(['КОТ', 'СОБАКА', 'ПИТОН', 'ПРОГРАММИРОВАНИЕ', 'КОМПЬЮТЕР'])   
+    hangman.guessed_letters = []
+    hangman.update_label()
+    main.close()
+    
 
 def pause():
     pause_window.show()
