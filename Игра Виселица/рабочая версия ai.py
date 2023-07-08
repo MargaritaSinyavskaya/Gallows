@@ -217,5 +217,6 @@ if __name__ == '__main__':
 
     hangman.pause_button.clicked.connect(pause)
     main.start_game.clicked.connect(open_game)
+    main.exit.clicked.connect(main.close)
     
     sys.exit(app.exec_())
