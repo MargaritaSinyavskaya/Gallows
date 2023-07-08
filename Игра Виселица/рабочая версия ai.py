@@ -22,13 +22,19 @@ class Main_win(QMainWindow):
         self.setWindowTitle('Виселица')
         self.resize(400, 400)
 
+        self.start_label = QLabel()
+        self.start_label.setText('Добро пожаловать в игру!')
+        self.start_label.setFont(QFont('Arial', 20))
 
         self.start_game = QPushButton('Начать игру')
+        self.start_game.setFixedSize(200, 50)
         self.exit = QPushButton('Выход')
+        self.exit.setFixedSize(200, 50)
 
         self.Vline = QVBoxLayout()
-        self.Vline.addWidget(self.start_game)
-        self.Vline.addWidget(self.exit)        
+        self.Vline.addWidget(self.start_label, alignment = Qt.AlignCenter)
+        self.Vline.addWidget(self.start_game, alignment = Qt.AlignCenter)
+        self.Vline.addWidget(self.exit, alignment = Qt.AlignCenter)        
         self.widget.setLayout(self.Vline)
 
 class Hangman(QMainWindow):
@@ -65,6 +71,7 @@ class Hangman(QMainWindow):
             x += 1
             if x % 11 == 0:
                 i += 1
+            button.setFixedSize(100, 50)
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.pause_button, Qt.AlignRight)
@@ -74,7 +81,7 @@ class Hangman(QMainWindow):
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
         self.setCentralWidget(self.widget)
-    
+
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
@@ -186,7 +193,7 @@ class pause_win(QMainWindow):
     def surrender(self):
         self.close()
         hangman.label.setText(hangman.word)
-
+            
 def open_game():
     hangman.show()
     hangman.tries = 0
