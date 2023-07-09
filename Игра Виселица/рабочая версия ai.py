@@ -65,13 +65,13 @@ class Hangman(QMainWindow):
         x = 0
         i = 0
         for letter in 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ':
-            button = QPushButton(letter, self)
-            button.clicked.connect(lambda _, l=letter: self.check_letter(l))
-            s_letters[i].addWidget(button)
+            self.button = QPushButton(letter, self)
+            self.button.clicked.connect(lambda _, l=letter: self.check_letter(l))
+            s_letters[i].addWidget(self.button)
             x += 1
             if x % 11 == 0:
                 i += 1
-            button.setFixedSize(100, 50)
+            self.button.setFixedSize(100, 50)
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.pause_button, Qt.AlignRight)
@@ -127,11 +127,15 @@ class Hangman(QMainWindow):
 
         if self.check_win():
             self.label.setText('Вы выиграли!')
-            self.disable_buttons()
+            game.stop_game()
+            #self.disable_buttons()
+            self.button.setEnabled(False)
 
         if self.check_lose():
             self.label.setText('Вы проиграли!')
-            self.disable_buttons()
+            game.stop_game()
+            #self.disable_buttons()
+            self.button.setEnabled(False)
 
         self.update()
 
@@ -156,9 +160,9 @@ class Hangman(QMainWindow):
     def check_lose(self):
         return self.tries >= self.max_tries
 
-    def disable_buttons(self):
-        for button in self.button_layout.children():
-            button.setEnabled(False)
+    #def disable_buttons(self):
+        #for button in self.button_layout.children():
+            #button.setEnabled(False)
 
 class pause_win(QMainWindow):
     def __init__(self):
@@ -193,6 +197,23 @@ class pause_win(QMainWindow):
     def surrender(self):
         self.close()
         hangman.label.setText(hangman.word)
+        game.stop_game()
+        #hangman.disable_buttons()
+        hangman.button.setEnabled(False)
+
+class Game(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.timer = QtCore.QTimer(self)
+        self.timer.timeout.connect(self.update_game)
+        self.timer.start(16)  # Обновлять экран каждые 16 миллисекунд
+
+    def update_game(self):
+        # Обновление игрового экрана
+        pass
+
+    def stop_game(self):
+        self.timer.stop()
             
 def open_game():
     hangman.show()
@@ -210,6 +231,7 @@ if __name__ == '__main__':
     main = Main_win()
     hangman = Hangman()
     pause_window = pause_win()
+    game = Game()
 
     hangman.pause_button.clicked.connect(pause)
     main.start_game.clicked.connect(open_game)
