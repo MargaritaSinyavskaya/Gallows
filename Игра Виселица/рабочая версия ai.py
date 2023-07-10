@@ -160,9 +160,9 @@ class Hangman(QMainWindow):
     def check_lose(self):
         return self.tries >= self.max_tries
 
-    #def disable_buttons(self):
-        #for button in self.button_layout.children():
-            #button.setEnabled(False)
+    def disable_buttons(self):
+        for self.button in self.button_layout.children():
+            self.button.setEnabled(False)
 
 class pause_win(QMainWindow):
     def __init__(self):
