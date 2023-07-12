@@ -22,20 +22,15 @@ class Main_win(QMainWindow):
         self.setWindowTitle('Виселица')
         self.resize(400, 400)
 
-        self.start_label = QLabel()
-        self.start_label.setText('Добро пожаловать в игру!')
-        self.start_label.setFont(QFont('Arial', 20))
 
         self.start_game = QPushButton('Начать игру')
-        self.start_game.setFixedSize(200, 50)
         self.exit = QPushButton('Выход')
-        self.exit.setFixedSize(200, 50)
 
         self.Vline = QVBoxLayout()
-        self.Vline.addWidget(self.start_label, alignment = Qt.AlignCenter)
-        self.Vline.addWidget(self.start_game, alignment = Qt.AlignCenter)
-        self.Vline.addWidget(self.exit, alignment = Qt.AlignCenter)        
+        self.Vline.addWidget(self.start_game)
+        self.Vline.addWidget(self.exit)        
         self.widget.setLayout(self.Vline)
+
 
 class Hangman(QMainWindow):
     def __init__(self):
@@ -47,8 +42,9 @@ class Hangman(QMainWindow):
         self.tries = 0
         self.max_tries = 8
         self.guessed_letters = []
-
+        self.is_editable = True
         self.pause_button = QPushButton('Пауза')
+
 
         self.label = QLabel(self)
         self.label.setGeometry(10, 10, 380, 30)
@@ -65,13 +61,12 @@ class Hangman(QMainWindow):
         x = 0
         i = 0
         for letter in 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ':
-            self.button = QPushButton(letter, self)
-            self.button.clicked.connect(lambda _, l=letter: self.check_letter(l))
-            s_letters[i].addWidget(self.button)
+            button = QPushButton(letter, self)
+            button.clicked.connect(lambda _, l=letter: self.check_letter(l))
+            s_letters[i].addWidget(button)
             x += 1
             if x % 11 == 0:
                 i += 1
-            self.button.setFixedSize(100, 50)
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.pause_button, Qt.AlignRight)
@@ -82,12 +77,14 @@ class Hangman(QMainWindow):
         self.widget.setLayout(self.layout)
         self.setCentralWidget(self.widget)
 
+
+
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
         painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
         painter.setBrush(Qt.NoBrush)
-
+    
         if self.tries >= 1:
             painter.drawLine(250, 320, 10, 320) # draw the floor
 
@@ -96,7 +93,7 @@ class Hangman(QMainWindow):
 
         if self.tries >= 3:
             painter.drawLine(175, 40, 70, 40) # draw the hline
-
+ 
         if self.tries >= 4:
             painter.drawLine(175, 40, 175, 100) # draw the vline
 
@@ -115,6 +112,8 @@ class Hangman(QMainWindow):
             painter.drawLine(175, 250, 200, 275)  # draw the right leg
 
     def check_letter(self, letter):
+        sender_button = app.sender()
+        sender_button.setEnabled(False)
         if letter in self.guessed_letters:
             return
 
@@ -127,15 +126,11 @@ class Hangman(QMainWindow):
 
         if self.check_win():
             self.label.setText('Вы выиграли!')
-            game.stop_game()
-            #self.disable_buttons()
-            self.button.setEnabled(False)
+            self.disable_buttons()
 
         if self.check_lose():
             self.label.setText('Вы проиграли!')
-            game.stop_game()
-            #self.disable_buttons()
-            self.button.setEnabled(False)
+            self.disable_buttons()
 
         self.update()
 
@@ -145,7 +140,7 @@ class Hangman(QMainWindow):
             if letter in self.guessed_letters:
                 text += letter
             else:
-                text += ' _ '
+                text += '_'
         self.label.setText(text)
         print(text)
         print(self.word)
@@ -161,8 +156,8 @@ class Hangman(QMainWindow):
         return self.tries >= self.max_tries
 
     def disable_buttons(self):
-        for self.button in self.button_layout.children():
-            self.button.setEnabled(False)
+        for button in self.button_layout.children():
+            button.setEnabled(False)
 
 class pause_win(QMainWindow):
     def __init__(self):
@@ -186,6 +181,7 @@ class pause_win(QMainWindow):
         self.continue_button.clicked.connect(self.continue_game_before_pause)
         self.surrender_button.clicked.connect(self.surrender)
 
+
     def exit_in_lobby(self):
         self.close()
         hangman.close()
@@ -197,23 +193,7 @@ class pause_win(QMainWindow):
     def surrender(self):
         self.close()
         hangman.label.setText(hangman.word)
-        game.stop_game()
-        #hangman.disable_buttons()
-        hangman.button.setEnabled(False)
 
-class Game(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.timer = QtCore.QTimer(self)
-        self.timer.timeout.connect(self.update_game)
-        self.timer.start(16)  # Обновлять экран каждые 16 миллисекунд
-
-    def update_game(self):
-        # Обновление игрового экрана
-        pass
-
-    def stop_game(self):
-        self.timer.stop()
             
 def open_game():
     hangman.show()
@@ -222,19 +202,22 @@ def open_game():
     hangman.guessed_letters = []
     hangman.update_label()
     main.close()
+    
 
 def pause():
     pause_window.show()
+
+
+
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     main = Main_win()
     hangman = Hangman()
     pause_window = pause_win()
-    game = Game()
 
     hangman.pause_button.clicked.connect(pause)
     main.start_game.clicked.connect(open_game)
-    main.exit.clicked.connect(main.close)
     
     sys.exit(app.exec_())
