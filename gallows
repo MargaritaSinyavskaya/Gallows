@@ -260,7 +260,7 @@ def pause():
     pause_window.show()
 
 def exit_in_lobby2():
-    endwin.hide()
+    endwin.end_win.hide()
     hangman.close()
     main.show()
 
