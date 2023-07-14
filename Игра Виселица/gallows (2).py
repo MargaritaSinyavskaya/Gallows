@@ -130,15 +130,11 @@ class Hangman(QMainWindow):
 
         if self.check_win():
             game.stop_game()
-            print('Конец игры.')
-            print('Вы выиграли!')
             endwin.text_label.setText('Вы выиграли!')
             endwin.end_win.show()
 
         if self.check_lose():
             game.stop_game()
-            print('Конец игры.')
-            print('Вы проиграли!')
             endwin.text_label.setText('Вы проиграли!')
             endwin.end_win.show()
 
@@ -201,8 +197,6 @@ class pause_win(QMainWindow):
         self.close()
         hangman.label.setText(hangman.word)
         game.stop_game()
-        print('Конец игры.')
-        print('Слово: ' + hangman.word)
         endwin.text_label.setText('Слово: ' + hangman.word)
         endwin.end_win.show()
 
