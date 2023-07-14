@@ -37,7 +37,7 @@ class Hangman(QMainWindow):
         super().__init__()
         self.setWindowTitle('Виселица')
         self.setGeometry(100, 100, 500, 500)
-
+        self.game_over = False
         self.word = random.choice(['КОТ', 'СОБАКА', 'ПИТОН', 'ПРОГРАММИРОВАНИЕ', 'КОМПЬЮТЕР'])
         self.tries = 0
         self.max_tries = 8
@@ -52,7 +52,8 @@ class Hangman(QMainWindow):
         self.label.setFont(QFont('Arial', 20))
 
         self.button_layout = QVBoxLayout()
-
+        self.btn_list = list()
+        
         s_letters = []
         for i in range(3):
             s_letters.append(QHBoxLayout())
@@ -64,6 +65,7 @@ class Hangman(QMainWindow):
             button = QPushButton(letter, self)
             button.clicked.connect(lambda _, l=letter: self.check_letter(l))
             s_letters[i].addWidget(button)
+            self.btn_list.append(button)
             x += 1
             if x % 11 == 0:
                 i += 1
@@ -84,7 +86,7 @@ class Hangman(QMainWindow):
         painter.setRenderHint(QPainter.Antialiasing)
         painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
         painter.setBrush(Qt.NoBrush)
-    
+        
         if self.tries >= 1:
             painter.drawLine(250, 320, 10, 320) # draw the floor
 
@@ -120,19 +122,23 @@ class Hangman(QMainWindow):
         self.guessed_letters.append(letter)
 
         if letter not in self.word:
-            self.tries += 1
+            if not(self.game_over):
+                self.tries += 1
 
         self.update_label()
 
         if self.check_win():
             self.label.setText('Вы выиграли!')
-            self.disable_buttons()
+            self.game_over = True
 
         if self.check_lose():
             self.label.setText('Вы проиграли!')
-            self.disable_buttons()
+            self.game_over = True
 
+        
         self.update()
+
+        
 
     def update_label(self):
         text = ''
@@ -155,9 +161,6 @@ class Hangman(QMainWindow):
     def check_lose(self):
         return self.tries >= self.max_tries
 
-    def disable_buttons(self):
-        for button in self.button_layout.children():
-            button.setEnabled(False)
 
 class pause_win(QMainWindow):
     def __init__(self):
@@ -200,6 +203,10 @@ def open_game():
     hangman.tries = 0
     hangman.word = random.choice(['КОТ', 'СОБАКА', 'ПИТОН', 'ПРОГРАММИРОВАНИЕ', 'КОМПЬЮТЕР'])   
     hangman.guessed_letters = []
+
+    for btn in hangman.btn_list:
+        btn.setEnabled(True)
+        
     hangman.update_label()
     main.close()
     
