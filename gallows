@@ -56,6 +56,7 @@ class Hangman(QMainWindow):
         self.label.setFont(QFont('Arial', 20))
 
         self.button_layout = QVBoxLayout()
+        self.btn_list = list()
 
         s_letters = []
         for i in range(3):
@@ -68,6 +69,7 @@ class Hangman(QMainWindow):
             self.button = QPushButton(letter, self)
             self.button.clicked.connect(lambda _, l=letter: self.check_letter(l))
             s_letters[i].addWidget(self.button)
+            self.btn_list.append(self.button)
             x += 1
             if x % 11 == 0:
                 i += 1
@@ -247,6 +249,10 @@ def open_game():
     hangman.tries = 0
     hangman.word = random.choice(['КОТ', 'СОБАКА', 'ПИТОН', 'ПРОГРАММИРОВАНИЕ', 'КОМПЬЮТЕР'])   
     hangman.guessed_letters = []
+
+    for btn in hangman.btn_list:
+        btn.setEnabled(True)
+
     hangman.update_label()
     main.close()
 
@@ -254,7 +260,7 @@ def pause():
     pause_window.show()
 
 def exit_in_lobby2():
-    endwin.close()
+    endwin.hide()
     hangman.close()
     main.show()
 
