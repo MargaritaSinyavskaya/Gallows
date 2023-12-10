@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtGui import QPainter, QFont, QPen
 from PyQt5.QtCore import Qt
+
 #создание главного меню
 class Main_win(QMainWindow):
     def __init__(self):
@@ -35,6 +36,7 @@ class Main_win(QMainWindow):
         self.Vline.addWidget(self.start_game, alignment = Qt.AlignCenter)
         self.Vline.addWidget(self.exit, alignment = Qt.AlignCenter)        
         self.widget.setLayout(self.Vline)
+        
 #создаем окно игры
 class Hangman(QMainWindow):
     def __init__(self):
@@ -82,7 +84,8 @@ class Hangman(QMainWindow):
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
         self.setCentralWidget(self.widget)
-    #ирсование человека
+        
+    #рисование человека
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
@@ -114,6 +117,7 @@ class Hangman(QMainWindow):
         if self.tries >= 8:
             painter.drawLine(175, 250, 150, 275)  # рисуем левую ногу
             painter.drawLine(175, 250, 200, 275)  # рисуем правую ногу
+            
     #проверяем буквы в слове
     def check_letter(self, letter):
         sender_button = app.sender()
@@ -161,6 +165,7 @@ class Hangman(QMainWindow):
     def disable_buttons(self):
         for self.button in self.button_layout.children():
             self.button.setEnabled(False)
+            
 #окно паузы
 class pause_win(QMainWindow):
     def __init__(self):
@@ -213,6 +218,7 @@ class Game(QWidget):
 
     def stop_game(self):
         self.timer.stop()
+        
 #конечное меню
 class EndGame(QMainWindow):
     def __init__(self):
